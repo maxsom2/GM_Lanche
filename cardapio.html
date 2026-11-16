@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#08080b"><title>Cardápio | GM Lanches</title><link rel="icon" href="assets/logo-gm-lanches-oficial.jpg" type="image/jpeg"><link rel="stylesheet" href="css/style.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer src="js/config.js"></script><script defer src="js/supabase-client.js"></script><script defer src="js/db-queries.js"></script><script defer src="js/layout.js"></script><script defer src="js/menu-data.js"></script><script defer src="js/menu.js"></script></head>
+<body id="top"><div id="site-header"></div><main class="container page-main"><div class="page-heading"><span class="eyebrow">ESCOLHA O SEU FAVORITO</span><h1>Cardápio</h1><p>Confira os ingredientes, personalize seu lanche e adicione ao carrinho.</p></div><div id="connection-notice" class="notice" hidden></div><div id="menu-status" class="status-note" aria-live="polite"></div>
+<div class="menu-toolbar">
+  <label class="menu-search"><input id="menu-search" type="search" placeholder="Buscar hambúrguer ou ingrediente…" autocomplete="off" aria-label="Buscar no cardápio"></label>
+  <div class="menu-filters" role="group" aria-label="Filtrar cardápio">
+    <button type="button" class="filter-chip" data-filter="all" aria-pressed="true">Todos</button>
+    <button type="button" class="filter-chip" data-filter="traditional" aria-pressed="false">Tradicionais</button>
+    <button type="button" class="filter-chip" data-filter="complete" aria-pressed="false">Completos</button>
+  </div>
+</div>
+<div id="menu-list" class="product-grid menu-grid"><div class="empty-state">Carregando cardápio…</div></div>
+<p class="form-help" style="margin-top:18px">As fotografias são ilustrativas. A composição e os ingredientes de cada lanche estão descritos no cardápio.</p></main><div id="site-footer"></div></body></html>
