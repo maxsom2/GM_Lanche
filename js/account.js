@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         email: formData.get('email'),
         password: formData.get('password'),
         options: {
-          emailRedirectTo: `${window.location.origin}/conta.html`,
+         emailRedirectTo: 'https://gmlanche.vercel.app/conta.html',
           data: {
             full_name: formData.get('full_name'),
             phone: formData.get('phone')
