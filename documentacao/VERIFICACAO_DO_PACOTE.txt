@@ -1,0 +1,37 @@
+GM LANCHES — RELATÓRIO DE VERIFICAÇÃO LOCAL
+
+Estrutura
+- 7 páginas HTML separadas.
+- Menu lateral compartilhado em js/layout.js.
+- Menu recolhível no desktop e gaveta lateral em celular/tablet.
+- Botão Voltar nas páginas internas.
+- Logo oficial aplicada no menu, cabeçalho móvel, rodapé e favicon.
+- 8 imagens ilustrativas de produtos em assets/products/.
+- Cardápio com 7 produtos, busca, filtros e personalização por remoção de ingredientes.
+- Carrinho, finalização, acompanhamento, conta opcional e painel administrativo.
+
+Compatibilidade com o SQL já executado
+- Leitura direta: products, product_ingredients, ingredients e neighborhoods.
+- RPCs: is_store_open, is_staff, create_order, track_order,
+  request_order_cancellation, staff_update_order,
+  staff_resolve_cancellation e staff_mark_payment_paid.
+- Removida a dependência de get_public_menu e get_delivery_neighborhoods.
+- Relatórios consultam orders e order_items; não dependem de views opcionais.
+- O pacote não traz uma migration principal para impedir execução duplicada.
+
+Verificações automatizadas locais
+- node --check: todos os arquivos JavaScript aprovados.
+- 7 páginas HTML verificadas.
+- Referências locais src/href: nenhuma ausente.
+- IDs duplicados: nenhum encontrado.
+- Parsing CSS (tinycss2): aprovado.
+- Formulários HTML com method=POST nativo: nenhum.
+- Arquivos de imagem dos produtos: 8 presentes.
+- Logo oficial: presente.
+
+Limites
+- Não houve autenticação na conta Supabase nem gravação real de pedido nesta sessão.
+- A chave publicável/anon ainda deve ser inserida em js/config.js.
+- O funcionamento real depende das políticas RLS, das funções das seis partes já executadas,
+  de uma conta de equipe cadastrada em staff_members e de horários/bairros configurados.
+- Fotografias de produtos são ilustrativas, não fotos reais dos lanches preparados pela loja.
