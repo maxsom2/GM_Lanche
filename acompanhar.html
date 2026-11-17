@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08080b">
+  <title>Acompanhar pedido | GM Lanches</title>
+  <link rel="icon" href="assets/logo-gm-lanches-oficial.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/supabase-client.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/track.js"></script>
+</head>
+<body id="top">
+  <div id="site-header"></div>
+  <main class="container page-main track-page">
+    <section class="track-intro">
+      <span class="eyebrow">ACOMPANHAMENTO GM LANCHES</span>
+      <h1>Onde está seu pedido?</h1>
+      <p>Informe o número do pedido e o telefone usado na compra para consultar o andamento.</p>
+    </section>
+    <div class="track-layout">
+      <form id="track-form" class="form-card track-form-card">
+        <div class="track-step"><span>1</span><div><strong>Identifique seu pedido</strong><small>O número aparece no comprovante ou no histórico da conta.</small></div></div>
+        <label>Número do pedido<input name="order_number" required inputmode="numeric" pattern="[0-9]*" placeholder="Ex.: 10001" autocomplete="off"></label>
+        <label>Telefone com DDD<input name="phone" required inputmode="tel" placeholder="(65) 99999-9999" autocomplete="tel"></label>
+        <button class="btn btn-primary btn-wide" type="submit">Consultar andamento</button>
+        <p class="form-help">Por segurança, o telefone deve ser o mesmo informado no pedido.</p>
+        <a class="track-account-link" href="conta.html">Ver todos os meus pedidos na minha conta →</a>
+      </form>
+      <aside class="track-help-card">
+        <span class="track-help-icon">⌕</span>
+        <h2>Não encontrou o número?</h2>
+        <p>Confira o histórico em Minha conta ou procure o comprovante da compra.</p>
+        <a class="btn btn-ghost btn-wide" href="conta.html">Ir para Minha conta</a>
+        <small>Você também pode acompanhar um pedido feito como visitante usando o número e telefone.</small>
+      </aside>
+    </div>
+    <div id="track-result" class="track-result" aria-live="polite"></div>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>

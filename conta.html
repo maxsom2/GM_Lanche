@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08080b">
+  <title>Minha conta | GM Lanches</title>
+  <link rel="icon" href="assets/logo-gm-lanches-oficial.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/supabase-client.js"></script>
+  <script defer src="js/db-queries.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/account.js"></script>
+</head>
+<body id="top">
+  <div id="site-header"></div>
+  <main class="container page-main account-page">
+    <section class="account-intro">
+      <span class="eyebrow">ÁREA DO CLIENTE</span>
+      <h1>Minha conta</h1>
+      <p>Encontre seus pedidos, acompanhe o andamento e mantenha seus endereços organizados.</p>
+    </section>
+    <div id="account-message" class="notice account-message" role="status" aria-live="polite" hidden></div>
+
+    <div id="auth-panels" class="account-auth-grid">
+      <form id="login-form" class="form-card account-auth-card">
+        <div class="account-card-icon">↗</div>
+        <span class="eyebrow">BEM-VINDO DE VOLTA</span>
+        <h2>Entrar na conta</h2>
+        <p class="muted">Acesse seu histórico e seus endereços salvos.</p>
+        <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+        <label>Senha<input name="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn btn-primary btn-wide" type="submit">Entrar</button>
+      </form>
+      <form id="signup-form" class="form-card account-auth-card">
+        <div class="account-card-icon">＋</div>
+        <span class="eyebrow">PRIMEIRO ACESSO</span>
+        <h2>Criar conta</h2>
+        <p class="muted">O cadastro é opcional. Você também pode pedir como visitante.</p>
+        <label>Nome completo<input name="full_name" autocomplete="name" required></label>
+        <label>Telefone<input name="phone" autocomplete="tel" required></label>
+        <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+        <label>Senha<input name="password" type="password" minlength="8" autocomplete="new-password" required></label>
+        <button class="btn btn-ghost btn-wide" type="submit">Criar minha conta</button>
+      </form>
+    </div>
+
+    <section id="account-dashboard" class="account-dashboard" hidden>
+      <div class="account-dashboard-head">
+        <div><span class="eyebrow">SEU ESPAÇO GM</span><h2>Olá, <span id="account-greeting">cliente</span>!</h2><p>Veja seus pedidos e mantenha tudo em um só lugar.</p></div>
+        <button id="logout-button" class="btn btn-ghost btn-small" type="button">Sair da conta</button>
+      </div>
+
+      <nav class="account-quick-links" aria-label="Atalhos da conta">
+        <a href="cardapio.html">＋ Fazer novo pedido</a>
+        <a href="acompanhar.html">⌕ Acompanhar com número</a>
+      </nav>
+      <div class="account-stats">
+        <article><small>Pedidos no histórico</small><strong id="account-total-orders">0</strong></article>
+        <article><small>Em andamento</small><strong id="account-active-orders">0</strong></article>
+        <article><small>Endereços salvos</small><strong id="account-address-count">0</strong></article>
+      </div>
+
+      <section class="account-section account-orders-section">
+        <div class="account-section-heading"><div><span class="eyebrow">HISTÓRICO</span><h2>Meus pedidos</h2><p>Pesquise pelo número ou filtre pelo andamento.</p></div><a href="acompanhar.html" class="account-outline-link">Acompanhar pedido</a></div>
+        <div class="account-order-tools">
+          <label class="account-search"><span>⌕</span><input id="account-order-search" type="search" placeholder="Buscar número do pedido..."></label>
+          <select id="account-order-filter" aria-label="Filtrar histórico"><option value="all">Todos</option><option value="active">Em andamento</option><option value="completed">Concluídos</option><option value="cancelled">Cancelados</option></select>
+        </div>
+        <div id="account-orders" class="account-order-list"><div class="empty-state">Carregando histórico…</div></div>
+      </section>
+
+      <div class="account-lower-grid">
+        <details class="account-section account-details-card">
+          <summary><span><span class="eyebrow">DADOS PESSOAIS</span><strong>Meu cadastro</strong></span><span class="account-summary-plus">＋</span></summary>
+          <form id="profile-form" class="account-inner-form">
+            <label>Nome completo<input name="full_name" required></label>
+            <label>Telefone<input name="phone"></label>
+            <label>E-mail<input name="email" type="email" disabled></label>
+            <button class="btn btn-primary" type="submit">Salvar dados</button>
+          </form>
+        </details>
+        <details class="account-section account-details-card">
+          <summary><span><span class="eyebrow">ENDEREÇOS</span><strong>Meus endereços</strong></span><span class="account-summary-plus">＋</span></summary>
+          <form id="saved-address-form" class="account-inner-form">
+            <label>Identificação<input name="label" maxlength="50" placeholder="Casa, trabalho..."></label>
+            <label>Bairro<select name="neighborhood_id" required><option value="">Selecione</option></select></label>
+            <div class="account-address-line"><label>Rua<input name="street" required></label><label>Número<input name="street_number" required></label></div>
+            <label>Complemento<input name="complement"></label>
+            <label>Ponto de referência<input name="reference_point"></label>
+            <label>CEP<input name="postal_code" inputmode="numeric"></label>
+            <label class="checkline"><input type="checkbox" name="is_default"> Definir como principal</label>
+            <button class="btn btn-primary" type="submit">Salvar endereço</button>
+          </form>
+          <div id="saved-addresses" class="saved-address-list"></div>
+        </details>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>
