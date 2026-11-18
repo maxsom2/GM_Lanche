@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08080b">
+  <title>Painel administrativo | GM Lanches</title>
+  <link rel="icon" href="assets/logo-gm-lanches-oficial.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/supabase-client.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/admin.js"></script>
+</head>
+<body id="top">
+  <div id="site-header"></div>
+
+  <main class="container page-main admin-main">
+    <section class="admin-page-heading">
+      <div>
+        <span class="eyebrow">GESTÃO DA LOJA</span>
+        <h1>Painel administrativo</h1>
+        <p>Pedidos, cardápio, entregas e funcionamento em um só lugar.</p>
+      </div>
+      <a class="admin-site-link" href="index.html" target="_blank" rel="noopener">Abrir loja ↗</a>
+    </section>
+
+    <div id="admin-message" class="notice admin-message" role="status" aria-live="polite" hidden></div>
+
+    <form id="admin-login" class="form-card admin-login-card">
+      <div class="admin-login-mark" aria-hidden="true">GM</div>
+      <span class="eyebrow">ACESSO RESTRITO</span>
+      <h2>Entrar na equipe</h2>
+      <p class="muted">Entre com a conta autorizada no cadastro de funcionários.</p>
+      <label>E-mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Senha<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn btn-primary btn-wide" type="submit">Acessar painel</button>
+    </form>
+
+    <section id="admin-panel" class="admin-app" hidden>
+      <div class="admin-app-topbar">
+        <div class="admin-app-identity">
+          <span class="admin-online-dot"></span>
+          <div><strong>Central da GM Lanches</strong><small>Área administrativa</small></div>
+        </div>
+        <div class="admin-app-actions">
+          <span class="admin-access-label">Equipe autorizada</span>
+          <button id="admin-logout" class="btn btn-ghost btn-small" type="button">Sair</button>
+        </div>
+      </div>
+
+      <div class="admin-app-layout">
+        <nav class="admin-nav" aria-label="Navegação administrativa">
+          <span class="admin-nav-caption">MENU PRINCIPAL</span>
+          <button class="admin-nav-item active" data-tab="overview" type="button"><span>⌂</span> Visão geral</button>
+          <button class="admin-nav-item" data-tab="orders" type="button"><span>▣</span> Pedidos</button>
+          <button class="admin-nav-item" data-tab="counter" type="button"><span>＋</span> Pedido presencial</button>
+          <button class="admin-nav-item" data-tab="products" type="button"><span>☷</span> Cardápio e custos</button>
+          <span class="admin-nav-caption admin-nav-spaced">LOJA</span>
+          <button class="admin-nav-item" data-tab="delivery" type="button"><span>⌖</span> Bairros e entregas</button>
+          <button class="admin-nav-item" data-tab="hours" type="button"><span>◷</span> Horários</button>
+          <span class="admin-nav-caption admin-nav-spaced">FINANCEIRO E EQUIPE</span>
+          <button class="admin-nav-item" data-tab="team" type="button"><span>♙</span> Funcionários</button>
+          <button class="admin-nav-item" data-tab="finance" type="button"><span>▤</span> Fechamento diário</button>
+          <span class="admin-nav-caption admin-nav-spaced">ACOMPANHAMENTO</span>
+          <button class="admin-nav-item" data-tab="reports" type="button"><span>▥</span> Relatórios</button>
+          <div class="admin-nav-foot"><span class="admin-nav-foot-dot"></span><div><strong>GM Lanches</strong><small>Sabor em cada mordida</small></div></div>
+        </nav>
+
+        <div class="admin-workspace">
+          <section class="admin-view active" id="tab-overview" aria-labelledby="overview-title">
+            <div class="admin-view-heading">
+              <div><span class="eyebrow">RESUMO DA OPERAÇÃO</span><h2 id="overview-title">Visão geral</h2><p>Acompanhe rapidamente o que está acontecendo na loja.</p></div>
+            </div>
+            <div class="admin-stat-grid">
+              <article class="admin-stat-card"><span class="admin-stat-icon">▣</span><div><small>Pedidos carregados</small><strong id="summary-orders">—</strong></div><span class="admin-stat-note">Últimos pedidos</span></article>
+              <article class="admin-stat-card"><span class="admin-stat-icon">☷</span><div><small>Produtos no cardápio</small><strong id="summary-products">—</strong></div><span class="admin-stat-note">Itens cadastrados</span></article>
+              <article class="admin-stat-card"><span class="admin-stat-icon">⌖</span><div><small>Bairros cadastrados</small><strong id="summary-neighborhoods">—</strong></div><span class="admin-stat-note" id="summary-neighborhoods-note">Ativos para entrega</span></article>
+            </div>
+            <div class="admin-overview-grid">
+              <article class="admin-panel-card">
+                <div class="admin-card-heading"><div><span class="eyebrow">ACESSO RÁPIDO</span><h3>O que você deseja fazer?</h3></div></div>
+                <div class="admin-shortcuts">
+                  <button type="button" data-tab="orders"><span>▣</span><strong>Ver pedidos</strong><small>Pesquisar e atualizar pedidos</small><b>→</b></button>
+                  <button type="button" data-tab="counter"><span>＋</span><strong>Lançar pedido presencial</strong><small>Registrar venda feita no balcão</small><b>→</b></button>
+                  <button type="button" data-tab="finance"><span>▤</span><strong>Fechar o dia</strong><small>Custos, entregas e rateio da equipe</small><b>→</b></button>
+                  <button type="button" data-tab="products"><span>☷</span><strong>Editar cardápio</strong><small>Preço e custo de produção</small><b>→</b></button>
+                  <button type="button" data-tab="delivery"><span>⌖</span><strong>Configurar entregas</strong><small>Bairros e taxas de entrega</small><b>→</b></button>
+                  <button type="button" data-tab="hours"><span>◷</span><strong>Alterar funcionamento</strong><small>Horários e preparo</small><b>→</b></button>
+                </div>
+              </article>
+              <article class="admin-panel-card admin-tip-card">
+                <span class="admin-tip-symbol">GM</span><span class="eyebrow">ORGANIZAÇÃO</span><h3>Uma loja, tudo organizado.</h3>
+                <p>Use o menu lateral para mudar de seção. As opções ficam no mesmo lugar em todas as telas do painel.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="admin-view" id="tab-orders" aria-labelledby="orders-title">
+            <div class="admin-view-heading admin-view-heading-row"><div><span class="eyebrow">ATENDIMENTO</span><h2 id="orders-title">Pedidos</h2><p>Pesquise pelo número, nome ou telefone e filtre pelo andamento.</p></div><button id="refresh-orders" class="btn btn-ghost btn-small" type="button">↻ Atualizar</button></div>
+            <div class="admin-orders-tools"><label class="admin-search-label"><span>⌕</span><input id="orders-search" type="search" placeholder="Número, cliente ou telefone..."></label><select id="orders-status-filter" aria-label="Filtrar pedidos"><option value="all">Todos os status</option><option value="received">Recebidos</option><option value="confirmed">Confirmados</option><option value="preparing">Em preparo</option><option value="ready">Prontos</option><option value="out_for_delivery">Em entrega</option><option value="completed">Concluídos</option><option value="cancelled">Cancelados</option></select><select id="orders-origin-filter" aria-label="Origem do pedido"><option value="all">Site e balcão</option><option value="website">Pedidos do site</option><option value="counter">Pedidos presenciais</option></select></div>
+            <div id="admin-orders" class="admin-orders"></div>
+          </section>
+
+          <section class="admin-view" id="tab-counter" aria-labelledby="counter-title">
+            <div class="admin-view-heading"><span class="eyebrow">VENDA PRESENCIAL</span><h2 id="counter-title">Novo pedido no balcão</h2><p>Use pelo celular para registrar um pedido feito pessoalmente. Ele entra no mesmo histórico e no fechamento do dia.</p></div>
+            <div class="counter-layout">
+              <form id="counter-form" class="admin-panel-card counter-form">
+                <h3>Dados do pedido</h3>
+                <div class="counter-fields"><label>Tipo do pedido<select name="order_type"><option value="pickup">Retirada no local</option><option value="delivery">Entrega</option></select></label><label>Forma de pagamento<select name="payment_method"><option value="pix">Pix</option><option value="cash">Dinheiro</option><option value="card_machine">Cartão na maquininha</option></select></label></div>
+                <div id="counter-customer-fields" class="counter-fields" hidden>
+                  <label>Nome de quem vai receber<input name="customer_name" maxlength="120" placeholder="Nome do destinatário"></label>
+                  <label>Telefone de contato<input name="customer_phone" inputmode="tel" maxlength="24" placeholder="(65) 99999-9999"></label>
+                </div>
+                <div id="counter-delivery-fields" hidden>
+                  <label>Bairro<select name="neighborhood_id" id="counter-neighborhood"><option value="">Selecione o bairro</option></select></label>
+                  <label>Endereço completo<input name="delivery_address" maxlength="300" placeholder="Rua, número e complemento"></label>
+                  <label>Entregador (opcional)<select name="delivery_staff_user_id" id="counter-delivery-staff"><option value="">Atribuir depois</option></select></label>
+                </div>
+                <label>Observação (opcional)<textarea name="order_notes" rows="2" maxlength="400"></textarea></label>
+                <label class="counter-paid-check"><input type="checkbox" name="payment_received"> Pagamento já recebido no balcão</label>
+                <div class="counter-payment-note"><strong>Retirada:</strong> não precisa informar nome nem telefone. Para entrega, informe os dados de quem vai receber.</div>
+              </form>
+              <div class="admin-panel-card counter-products-card">
+                <h3>Adicionar itens ao pedido</h3>
+                <div class="counter-category-tabs" role="group" aria-label="Categoria de produtos">
+                  <button type="button" class="counter-category active" data-counter-category="lanche">Lanches</button>
+                  <button type="button" class="counter-category" data-counter-category="bebida">Bebidas</button>
+                  <button type="button" class="counter-category" data-counter-category="combo">Combos</button>
+                </div>
+                <div class="counter-add-row"><label>Produto<select id="counter-product"><option value="">Carregando cardápio...</option></select></label><label>Qtd.<input id="counter-quantity" type="number" min="1" max="30" value="1"></label><button id="counter-add-item" class="btn btn-primary" type="button">Adicionar</button></div>
+                <div id="counter-cart" class="counter-cart"><p class="muted">Adicione os lanches do pedido.</p></div>
+                <div class="counter-totals"><div><span>Subtotal</span><strong id="counter-subtotal">R$ 0,00</strong></div><div><span>Entrega</span><strong id="counter-delivery-fee">R$ 0,00</strong></div><div class="counter-total"><span>Total estimado</span><strong id="counter-total">R$ 0,00</strong></div></div>
+                <button id="counter-submit" class="btn btn-primary btn-wide" type="button">Registrar pedido presencial</button>
+                <p class="form-help">O valor definitivo é recalculado pelo Supabase. Os custos de produção são registrados separadamente para o fechamento.</p>
+              </div>
+            </div>
+            <div id="counter-result" class="notice" hidden></div>
+          </section>
+
+          <section class="admin-view" id="tab-products" aria-labelledby="products-title">
+            <div class="admin-view-heading"><span class="eyebrow">CARDÁPIO E CUSTOS</span><h2 id="products-title">Lanches, bebidas e combos</h2><p>Cadastre novos itens, fotos, preços e custos. O custo de produção será reservado no fechamento para reposição.</p></div>
+            <div class="admin-panel-card product-create-card">
+              <div class="admin-card-heading"><div><span class="eyebrow">NOVO ITEM</span><h3>Adicionar ao cardápio</h3><p>Use Bebida para refrigerantes e água; use Combo para conjuntos de lanche + bebida/acompanhamento.</p></div></div>
+              <form id="product-form" class="product-create-form">
+                <label>Tipo<select name="product_category"><option value="lanche">Lanche</option><option value="bebida">Bebida</option><option value="combo">Combo</option></select></label>
+                <label>Nome<input name="name" maxlength="100" required placeholder="Ex.: Refrigerante 2 L"></label>
+                <label>Preço (R$)<input name="price" type="number" min="0.01" step="0.01" required></label>
+                <label>Custo (R$)<input name="production_cost" type="number" min="0" step="0.01" required placeholder="Custo para a loja"></label>
+                <label class="product-create-description">Descrição<input name="description" maxlength="300" placeholder="Ex.: Refrigerante de cola 2 litros"></label>
+                <label class="product-create-image">Link público da foto<input name="image_url" type="url" placeholder="https://..."><small>Você pode adicionar a foto depois colando o link público da imagem.</small></label>
+                <button class="btn btn-primary" type="submit">Cadastrar item</button>
+              </form>
+            </div>
+            <div class="admin-products-toolbar"><strong>Itens cadastrados</strong><label>Mostrar<select id="products-category-filter"><option value="all">Todos</option><option value="lanche">Lanches</option><option value="bebida">Bebidas</option><option value="combo">Combos</option></select></label></div>
+            <div id="admin-products" class="admin-list"></div>
+          </section>
+
+          <section class="admin-view" id="tab-delivery" aria-labelledby="delivery-title">
+            <div class="admin-view-heading"><span class="eyebrow">ÁREA DE ENTREGA</span><h2 id="delivery-title">Bairros e taxas</h2><p>Veja o que já está no Supabase, encontre bairros faltantes e controle as taxas.</p></div>
+            <div class="admin-neighborhood-stats" aria-live="polite">
+              <div><small>Total cadastrados</small><strong id="neighborhood-total">—</strong></div>
+              <div><small>Ativos no checkout</small><strong id="neighborhood-active">—</strong></div>
+              <div><small>Faltando cadastrar</small><strong id="neighborhood-missing">—</strong></div>
+            </div>
+
+            <div class="admin-delivery-layout">
+              <div class="admin-panel-card admin-neighborhood-panel">
+                <div class="admin-card-heading admin-card-heading-wrap"><div><span class="eyebrow">CADASTRO DO BANCO</span><h3>Bairros cadastrados</h3><p>Altere a taxa ou desative um bairro sem apagar o registro.</p></div>
+                  <div class="admin-neighborhood-filters"><button id="refresh-neighborhoods" class="btn btn-ghost btn-small" type="button">↻ Atualizar</button><label class="admin-search-label"><span>⌕</span><input id="neighborhood-search" type="search" placeholder="Buscar bairro..."></label><select id="neighborhood-filter" aria-label="Filtrar bairros"><option value="all">Todos</option><option value="active">Ativos</option><option value="inactive">Desativados</option></select></div>
+                </div>
+                <div id="neighborhood-list" class="admin-neighborhood-list"><div class="empty-state">Carregando bairros cadastrados…</div></div>
+              </div>
+
+              <aside class="admin-delivery-side">
+                <div class="admin-panel-card">
+                  <span class="eyebrow">NOVO CADASTRO</span><h3>Adicionar bairro manualmente</h3>
+                  <form id="neighborhood-form" class="admin-neighborhood-form">
+                    <label>Nome do bairro<input name="name" maxlength="100" placeholder="Ex.: Cidade Nova" required></label>
+                    <label>Taxa de entrega (R$)<input name="delivery_fee" type="number" min="0" step="0.01" value="0.00" required></label>
+                    <label class="admin-inline-check"><input name="is_active" type="checkbox"> Ativar no checkout após cadastrar</label>
+                    <button class="btn btn-primary btn-wide" type="submit">Adicionar bairro</button>
+                  </form>
+                </div>
+                <div class="admin-panel-card admin-reference-card">
+                  <div class="admin-card-heading"><div><span class="eyebrow">CONFERÊNCIA DA CIDADE</span><h3>Lista de referência</h3></div><span class="admin-reference-count" id="reference-missing-count">—</span></div>
+                  <p>Os nomes abaixo são comparados com os registros do banco. Use esta relação como conferência das listas anteriores; confirme a denominação antes de ativar. Cadastros novos entram desativados.</p>
+                  <label class="admin-search-label"><span>⌕</span><input id="reference-search" type="search" placeholder="Buscar bairro faltante..."></label>
+                  <div id="reference-neighborhoods" class="reference-neighborhood-list"></div>
+                  <button class="btn btn-ghost btn-wide" id="add-all-missing-neighborhoods" type="button">Cadastrar todos os faltantes desativados</button>
+                  <small class="admin-safety-note">A ação não apaga nem altera bairros existentes. Os novos registros ficam inativos e com taxa R$ 0,00 até serem configurados.</small>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="admin-view" id="tab-hours" aria-labelledby="hours-title">
+            <div class="admin-view-heading"><span class="eyebrow">FUNCIONAMENTO</span><h2 id="hours-title">Horários e pedidos</h2><p>Controle quando a loja recebe pedidos e o tempo padrão de preparo.</p></div>
+            <div class="admin-settings-grid">
+              <div class="admin-panel-card"><span class="eyebrow">STATUS DA LOJA</span><h3>Configurações gerais</h3>
+                <form id="store-settings-form" class="admin-settings-form">
+                  <label>Receber pedidos<select name="accepts_orders"><option value="true">Sim</option><option value="false">Não</option></select></label>
+                  <label>Fechamento manual<select name="manually_closed"><option value="false">Aberta conforme horário</option><option value="true">Fechar temporariamente</option></select></label>
+                  <label>Tempo padrão de preparo (minutos)<input type="number" name="default_prep_minutes" min="1" max="360" required></label>
+                  <button class="btn btn-primary" type="submit">Salvar configurações</button>
+                </form>
+              </div>
+              <div class="admin-panel-card"><span class="eyebrow">AGENDA DA LOJA</span><h3>Horários por dia</h3><p class="form-help">Defina abertura, fechamento ou marque o dia como fechado.</p>
+                <form id="store-hours-form"><div id="store-hours-fields" class="hours-grid"></div><button class="btn btn-primary" type="submit">Salvar horários</button></form>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-view" id="tab-team" aria-labelledby="team-title">
+            <div class="admin-view-heading"><span class="eyebrow">EQUIPE</span><h2 id="team-title">Funcionários e participação</h2><p>Defina a função e o peso de cada pessoa. O cálculo mostra a porcentagem proporcional no fechamento.</p></div>
+            <div class="admin-panel-card team-guidance"><strong>Pesos iniciais sugeridos:</strong> chapeiro 1,50 · gerente 1,20 · atendente 1,00 · caixa/auxiliar 0,90. São referências editáveis. Entregadores recebem por entrega concluída e ficam fora do rateio geral.</div>
+            <div id="team-list" class="team-list"><div class="empty-state">Carregando equipe…</div></div>
+          </section>
+
+          <section class="admin-view" id="tab-finance" aria-labelledby="finance-title">
+            <div class="admin-view-heading admin-view-heading-row"><div><span class="eyebrow">FINANCEIRO</span><h2 id="finance-title">Fechamento diário</h2><p>Confira o dinheiro recebido, a reserva para reposição, pagamentos de entrega e o saldo estimado para rateio.</p></div><label class="report-period">Dia<input id="finance-day" type="date"></label></div>
+            <div id="finance-message" class="notice" hidden></div>
+            <div id="finance-summary" class="finance-summary"><div class="empty-state">Selecione um dia para calcular.</div></div>
+            <div class="finance-columns">
+              <div class="admin-panel-card"><h3>Rateio da equipe</h3><p class="form-help">A porcentagem depende do peso definido em Funcionários. Entregadores aparecem em uma seção separada.</p><div id="finance-staff-share"></div></div>
+              <div class="admin-panel-card"><h3>Pagamento dos entregadores</h3><div id="finance-couriers"></div></div>
+            </div>
+            <div class="finance-columns finance-bottom">
+              <div class="admin-panel-card"><h3>Lançar outra despesa</h3><form id="expense-form" class="expense-form"><label>Descrição<input name="description" maxlength="140" placeholder="Ex.: gás, energia, manutenção" required></label><label>Categoria<select name="category"><option value="operacional">Operacional</option><option value="outros">Outros</option></select></label><label>Valor (R$)<input name="amount" type="number" min="0.01" step="0.01" required></label><button class="btn btn-primary" type="submit">Registrar despesa</button></form><p class="form-help">Não lance aqui o custo dos ingredientes já reservado por lanche nem o pagamento do entregador: esses valores entram automaticamente para evitar duplicidade.</p></div>
+              <div class="admin-panel-card"><h3>Como o saldo é calculado</h3><ol class="finance-formula"><li>Vendas concluídas e pagas</li><li>Menos custo dos lanches vendidos (reserva de reposição)</li><li>Menos pagamentos previstos dos entregadores</li><li>Menos despesas operacionais registradas</li><li>Saldo restante dividido conforme os pesos da equipe</li></ol><p class="form-help">Se algum lanche vendido estiver sem custo cadastrado, o sistema bloqueia o rateio até preencher os custos.</p></div>
+            </div>
+          </section>
+
+          <section class="admin-view" id="tab-reports" aria-labelledby="reports-title">
+            <div class="admin-view-heading admin-view-heading-row"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2 id="reports-title">Relatórios</h2><p>Resumo das vendas e dos pagamentos no período escolhido.</p></div><label class="report-period">Período<select id="report-period"><option value="day">Hoje</option><option value="week" selected>Últimos 7 dias</option><option value="month">Últimos 30 dias</option></select></label></div>
+            <div id="admin-reports" class="report-grid"></div>
+            <div class="admin-panel-card admin-payment-report"><h3>Vendas por forma de pagamento</h3><div id="payment-report"></div></div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>
